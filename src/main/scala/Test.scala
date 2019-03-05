@@ -1,3 +1,5 @@
 class Test {
-    
+    def foo() = {
+        
+    }
 }
