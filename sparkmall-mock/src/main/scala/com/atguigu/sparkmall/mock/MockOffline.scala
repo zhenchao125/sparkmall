@@ -30,7 +30,7 @@ object MockOffline {
     //品类数量
     val cargoryNum = 20
     // 商品数量
-    val productNum = 100
+    val productNum = 50
     // --- 商品相关参数 结束 ---
 
 

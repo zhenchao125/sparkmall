@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/sparkmall.iml" filepath="$PROJECT_DIR$/sparkmall.iml" />
       <module fileurl="file://$PROJECT_DIR$/sparkmall-common/sparkmall-common.iml" filepath="$PROJECT_DIR$/sparkmall-common/sparkmall-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/sparkmall-mock/sparkmall-mock.iml" filepath="$PROJECT_DIR$/sparkmall-mock/sparkmall-mock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sparkmall-offline/sparkmall-offline.iml" filepath="$PROJECT_DIR$/sparkmall-offline/sparkmall-offline.iml" />
     </modules>
   </component>
 </project>

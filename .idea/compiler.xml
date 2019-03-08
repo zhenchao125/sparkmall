@@ -8,12 +8,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="sparkmall-common" />
         <module name="sparkmall-mock" />
+        <module name="sparkmall-offline" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="sparkmall" target="1.8" />
       <module name="sparkmall-common" target="1.8" />
       <module name="sparkmall-mock" target="1.8" />
+      <module name="sparkmall-offline" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

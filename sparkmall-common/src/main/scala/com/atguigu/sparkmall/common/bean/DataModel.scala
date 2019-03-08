@@ -48,12 +48,13 @@ case class ProductInfo(product_id: Long,
   * @param page_id            某个页面的ID
   * @param action_time        点击行为的时间点
   * @param search_keyword     用户搜索的关键词
-  * @param click_category_id  某一个商品品类的ID
-  * @param click_product_id   某一个商品的ID
+  * @param click_category_id  一次点击的某一个商品品类的ID
+  * @param click_product_id   一次点击的某一个商品的ID
   * @param order_category_ids 一次订单中所有品类的ID集合
   * @param order_product_ids  一次订单中所有商品的ID集合
   * @param pay_category_ids   一次支付中所有品类的ID集合
   * @param pay_product_ids    一次支付中所有商品的ID集合
+  * @param city_id            所在城市 id
   */
 case class UserVisitAction(date: String,
                            user_id: Long,
