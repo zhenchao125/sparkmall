@@ -3,3 +3,10 @@
 src/test
 target/
 .DS_Store
+sparkmall-common/src/main/java/
+sparkmall-common/src/test/
+sparkmall-mock/src/main/java/
+sparkmall-mock/src/main/resources/
+sparkmall-mock/src/test/
+sparkmall-offline/src/main/java/
+sparkmall-offline/src/test/

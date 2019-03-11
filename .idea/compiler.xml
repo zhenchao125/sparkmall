@@ -9,6 +9,7 @@
         <module name="sparkmall-common" />
         <module name="sparkmall-mock" />
         <module name="sparkmall-offline" />
+        <module name="sparkmall-realtime" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -16,6 +17,8 @@
       <module name="sparkmall-common" target="1.8" />
       <module name="sparkmall-mock" target="1.8" />
       <module name="sparkmall-offline" target="1.8" />
+      <module name="sparkmall-online" target="1.8" />
+      <module name="sparkmall-realtime" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
