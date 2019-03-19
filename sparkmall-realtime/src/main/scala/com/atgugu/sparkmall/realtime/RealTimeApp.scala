@@ -1,6 +1,6 @@
 package com.atgugu.sparkmall.realtime
 
-import com.atgugu.sparkmall.realtime.app.{AreaCityAdsPerDay, BlackListApp}
+import com.atgugu.sparkmall.realtime.app.{AreaAdsTop3App, AreaCityAdsPerDay, BlackListApp}
 import com.atgugu.sparkmall.realtime.bean.AdsInfo
 import com.atguigu.sparkmall.common.util.MyKafkaUtil
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -10,6 +10,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object RealTimeApp {
     def main(args: Array[String]): Unit = {
+        System.setProperty("HADOOP_USER_NAME","atguigu")
         // 1. 创建 SparkConf 对象
         val conf: SparkConf = new SparkConf()
             .setAppName("RealTimeApp")
@@ -34,13 +35,15 @@ object RealTimeApp {
         val filteredAdsInfoDStream: DStream[AdsInfo] = BlackListApp.checkUserFromBlackList(adsClickInfoDStream, sc)
         // 只检查那些没有进入黑名单用户是否需要加入黑名单(过滤后的做处理)
         BlackListApp.checkUserToBlackList(filteredAdsInfoDStream)
-        filteredAdsInfoDStream.print
         // 需求5: 结束
 
         // 需求6: 开始 每天每区每城市广告点击量
-        AreaCityAdsPerDay.statAreaCityAdsPerDay(filteredAdsInfoDStream, sc)
+        val areaCityAdsCount: DStream[(String, Long)] = AreaCityAdsPerDay.statAreaCityAdsPerDay(filteredAdsInfoDStream, sc)
         // 需求6: 结束
 
+        // 需求7: 开始
+        AreaAdsTop3App.statAreaAdsTop3(areaCityAdsCount)
+        // 需求7: 结束
         ssc.start()
         ssc.awaitTermination()
     }

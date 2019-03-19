@@ -4,8 +4,12 @@ import org.apache.spark.util.AccumulatorV2
 
 import scala.collection.mutable
 
+/*
+输入: (品类 id, 操作类型)
+输出: Map((品类 id, 操作类型), 数量)
+ */
 class MapAccumulator extends AccumulatorV2[(String, String), mutable.Map[(String, String), Long]] {
-    val map = mutable.Map[(String, String), Long]()
+    val map: mutable.Map[(String, String), Long] = mutable.Map[(String, String), Long]()
 
     override def isZero: Boolean = map.isEmpty
 
@@ -29,8 +33,12 @@ class MapAccumulator extends AccumulatorV2[(String, String), mutable.Map[(String
     override def merge(other: AccumulatorV2[(String, String), mutable.Map[(String, String), Long]]): Unit = {
         val otherMap: mutable.Map[(String, String), Long] = other.value
         otherMap.foreach {
-            kv => map.put(kv._1, map.getOrElse(kv._1, 0L) + kv._2)
+            //            kv => map.put(kv._1, map.getOrElse(kv._1, 0L) + kv._2)
+            case (k, count) => {
+                map.put(k, map.getOrElse(k, 0L) + count)
+            }
         }
     }
+
     override def value: mutable.Map[(String, String), Long] = map
 }

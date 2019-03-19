@@ -26,6 +26,7 @@ object AreaCityAdsPerDay {
             }
             jedisClient.close()
         })
+        resultDSteam
     }
 }
 

@@ -7,6 +7,8 @@ import com.atguigu.sparkmall.offline.bean.CategoryCountInfo
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 
+import scala.collection.mutable
+
 object CategoryTop10App {
 
     // 统计热门品 Top10
@@ -21,21 +23,23 @@ object CategoryTop10App {
                 if (visitAction.click_category_id != -1) {
                     acc.add(visitAction.click_category_id.toString, "click")
                 } else if (visitAction.order_category_ids != null) {
+                    // 订单业务有可能涉及多个品类, 所以需要切开之后分别累加
                     visitAction.order_category_ids.split(",").foreach {
                         oid => acc.add(oid, "order")
                     }
                 } else if (visitAction.pay_category_ids != null) {
+                    // 支付业务有可能涉及多个品类, 所以需要切开之后分别累加
                     visitAction.pay_category_ids.split(",").foreach {
                         pid => acc.add(pid, "pay")
                     }
                 }
             }
         }
-        // 3. 遍历完成之后就得到每个每个品类 id 和操作类型的数量.  然后按照 CategoryId 进行进行分组
-        val actionCountByCategoryIdMap = acc.value.groupBy(_._1._1)
+        // 3. 遍历完成之后就得到每个品类 id 和操作类型及操作的数量.  然后按照 CategoryId 进行进行分组
+        val actionCountByCategoryIdMap: Map[String, mutable.Map[(String, String), Long]] = acc.value.groupBy(_._1._1)
 
-        // 4. 聚合成 CategoryCountInfo 类型的集合
-        val categoryCountInfoList = actionCountByCategoryIdMap.map {
+        // 4. 转换成 CategoryCountInfo 类型的集合
+        val categoryCountInfoList: List[CategoryCountInfo] = actionCountByCategoryIdMap.map {
             case (cid, actionMap) => CategoryCountInfo(
                 taskId,
                 cid,
@@ -46,13 +50,13 @@ object CategoryTop10App {
         }.toList
 
         // 5. 按照 点击 下单 支付 的顺序降序来排序
-        val sortedCategoryInfoList = categoryCountInfoList.sortBy(info => (info.clickCount, info.orderCount, info.payCount))(Ordering.Tuple3(Ordering.Long.reverse, Ordering.Long.reverse, Ordering.Long.reverse))
+        val sortedCategoryInfoList: List[CategoryCountInfo] = categoryCountInfoList.sortBy(info => (info.clickCount, info.orderCount, info.payCount))(Ordering.Tuple3(Ordering.Long.reverse, Ordering.Long.reverse, Ordering.Long.reverse))
 
         // 6. 截取前 10
-        val top10 = sortedCategoryInfoList.take(10)
+        val top10: List[CategoryCountInfo] = sortedCategoryInfoList.take(10)
 
         // 7. 插入数据库
-        val argsList = top10.map(info => Array(info.taskId, info.categoryId, info.clickCount, info.orderCount, info.payCount))
+        val argsList: List[Array[Any]] = top10.map(info => Array(info.taskId, info.categoryId, info.clickCount, info.orderCount, info.payCount))
         JDBCUtil.executeUpdate("truncate category_top10", null)
         JDBCUtil.executeBatchUpdate("insert into category_top10 values(?, ?, ?, ?, ?)", argsList)
         top10

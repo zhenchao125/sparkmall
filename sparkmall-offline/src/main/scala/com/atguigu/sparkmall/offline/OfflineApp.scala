@@ -5,14 +5,12 @@ import java.util.UUID
 import com.alibaba.fastjson.JSON
 import com.atguigu.sparkmall.common.bean.UserVisitAction
 import com.atguigu.sparkmall.common.util.ConfigurationUtil
-import com.atguigu.sparkmall.offline.app.{AreaClickTop3App, CategorySessionApp, CategoryTop10App, PageConversionApp}
+import com.atguigu.sparkmall.offline.app.AreaClickTop3App
 import com.atguigu.sparkmall.offline.bean.Condition
 import org.apache.spark.sql.SparkSession
 
 object OfflineApp {
     def main(args: Array[String]): Unit = {
-
-
         val spark: SparkSession = SparkSession
             .builder()
             .master("local[*]")
@@ -26,15 +24,15 @@ object OfflineApp {
         userVisitActionRDD.cache // 做缓存
 
         println("任务1: 开始... 品类 top10")
-//        val categoryTop10 = CategoryTop10App.statCategoryTop10(spark, userVisitActionRDD, taskId)
+        //        val categoryTop10 = CategoryTop10App.statCategoryTop10(spark, userVisitActionRDD, taskId)
         println("任务1: 结束")
 
         println("任务2: 开始... 品类 top10中的 top10 session")
-//        CategorySessionApp.statCategoryTop10Session(spark, categoryTop10, userVisitActionRDD, taskId)
+        //        CategorySessionApp.statCategoryTop10Session(spark, categoryTop10, userVisitActionRDD, taskId)
         println("任务2: 结束")
 
         println("任务3: 开始... 规定页面跳转率")
-//        PageConversionApp.calcPageConversion(spark, userVisitActionRDD, readConditions.targetPageFlow, taskId)
+        //        PageConversionApp.calcPageConversion(spark, userVisitActionRDD, readConditions.targetPageFlow, taskId)
         println("任务3: 结束")
 
         println("任务4: 开始... 各个地区热点商品 top3")
@@ -81,6 +79,5 @@ object OfflineApp {
         val conditionString = config.getString("condition.params.json")
         // 解析成 Condition 对象
         JSON.parseObject(conditionString, classOf[Condition])
-
     }
 }
