@@ -57,6 +57,4 @@ object JDBCUtil {
         ps.executeBatch()
         conn.commit()
     }
-
-
 }

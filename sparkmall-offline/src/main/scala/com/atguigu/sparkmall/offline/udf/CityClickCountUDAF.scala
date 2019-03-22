@@ -9,7 +9,7 @@ import org.apache.spark.sql.types._
 class CityClickCountUDAF extends UserDefinedAggregateFunction {
 
 
-    // 输出数据的类型 北京:String
+    // 输入数据的类型 北京:String
     override def inputSchema: StructType = {
         StructType(StructField("city_name", StringType) :: Nil)
     }
@@ -48,7 +48,7 @@ class CityClickCountUDAF extends UserDefinedAggregateFunction {
         // 合并各个城市的累计
         val map1: Map[String, Long] = buffer1.getAs[Map[String, Long]](0)
         val map2: Map[String, Long] = buffer2.getAs[Map[String, Long]](0)
-
+        // 合并每个城市的点击量
         buffer1(0) = map1.foldLeft(map2) {
             case (m, (cityName, cityCount)) => {
                 m + (cityName -> (m.getOrElse(cityName, 0L) + cityCount))
@@ -71,9 +71,11 @@ class CityClickCountUDAF extends UserDefinedAggregateFunction {
                 CityRemark(cityName, ratio)
             }
         }
-        // 3. 剩下的合并的其他
-        var otherRadio = 1D
-        cityRemarks.foreach(otherRadio -= _.cityRatio)
+        // 3. 剩下的合并到其他
+        //        var otherRadio = 1D
+        //        cityRemarks.foreach(otherRadio -= _.cityRatio)
+//        val otherRadio: Double = cityRemarks.foldLeft(1D)(_ - _.cityRatio)
+        val otherRadio: Double = (1D /: cityRemarks)(_ - _.cityRatio)
         cityRemarks = cityRemarks :+ CityRemark("其他", otherRadio)
         // 4. 拼接成字符串
         cityRemarks.mkString(", ")

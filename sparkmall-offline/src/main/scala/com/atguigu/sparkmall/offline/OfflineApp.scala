@@ -5,7 +5,7 @@ import java.util.UUID
 import com.alibaba.fastjson.JSON
 import com.atguigu.sparkmall.common.bean.UserVisitAction
 import com.atguigu.sparkmall.common.util.ConfigurationUtil
-import com.atguigu.sparkmall.offline.app.AreaClickTop3App
+import com.atguigu.sparkmall.offline.app.{AreaClickTop3App, CategorySessionApp, CategoryTop10App}
 import com.atguigu.sparkmall.offline.bean.Condition
 import org.apache.spark.sql.SparkSession
 
@@ -24,11 +24,11 @@ object OfflineApp {
         userVisitActionRDD.cache // 做缓存
 
         println("任务1: 开始... 品类 top10")
-        //        val categoryTop10 = CategoryTop10App.statCategoryTop10(spark, userVisitActionRDD, taskId)
+        val categoryTop10 = CategoryTop10App.statCategoryTop10(spark, userVisitActionRDD, taskId)
         println("任务1: 结束")
 
         println("任务2: 开始... 品类 top10中的 top10 session")
-        //        CategorySessionApp.statCategoryTop10Session(spark, categoryTop10, userVisitActionRDD, taskId)
+        CategorySessionApp.statCategoryTop10Session(spark, categoryTop10, userVisitActionRDD, taskId)
         println("任务2: 结束")
 
         println("任务3: 开始... 规定页面跳转率")

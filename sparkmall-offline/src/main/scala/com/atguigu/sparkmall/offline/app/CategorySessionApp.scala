@@ -42,3 +42,12 @@ object CategorySessionApp {
     }
 
 }
+/*
+
+过滤出来只包含 top10 categoryId的 RDD[UserVisitAction].map =>
+RDD[(categoryId, sessionId), 1].reduceByKey =>
+RDD[(categoryId, sessionId), count].map =>
+RDD[categoryId, (sessionId, count)].groupByKey  =>
+RDD[categoryId, Iterator[(sessionId, count)]] => 排序, 取前10
+
+ */
